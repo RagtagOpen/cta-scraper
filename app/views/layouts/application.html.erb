@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CtaScraper</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CTA Scraper</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -9,9 +12,45 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">CTA Scraper</a>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+          <% if current_admin %>
+            <li>
+              <%= link_to 'Sign Out', destroy_admin_session_path, method: :delete %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to 'Sign In', new_admin_session_path %>
+            </li>
+          <% end %>
+        </ul>
+
+      </div><!-- /.container-->
+    </nav>
+    <div class="container">
+      <div class="row">
+        <% flash.each do |key, value| %>
+          <div class="alert <%= bootstrap_class_for(key) %> fade in text-center margin-top-one-em">
+            <%= value %>
+          </div><!-- /alert -->
+        <% end %>
+      </div> <!-- /row -->
+    </div> <!-- /container -->
 
     <%= yield %>
+
   </body>
 </html>

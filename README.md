@@ -1,14 +1,16 @@
 # CTA Scraper
 
 This webapp performed scheduled webscraping of politically-oriented calls to 
-action (CTAs).  The results of the scraping are sent over to the 
-CTAAggregator API, where they're made available to the public.
+action (CTAs). It has 2 main components
+1. Scrape sites and send the results to the  CTAAggregator API.
+2. Admin Panel to display unsucessful scraping attempts (alerting admins that the sraper scripts need to be updated)
+
 
 
 ToDo
-Bump ruby version to 2.4
-Remove unneeded dependency
 update Readme
+center devise pages
+Style homepage
 
 
 # Admins
