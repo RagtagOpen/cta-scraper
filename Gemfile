@@ -24,6 +24,8 @@ gem 'coffee-rails', '~> 4.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 
+gem 'devise', '4.3.0'
+
 group :development, :test do
   gem 'dotenv-rails', '2.2.1'
   gem 'pry-rails', '0.3.6'
