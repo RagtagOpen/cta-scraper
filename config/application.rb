@@ -20,5 +20,8 @@ module CtaScraper
     config.generators do |g|
       g.javascript_engine :js
     end
+
+
+    config.sass.preferred_syntax = :scss
   end
 end
