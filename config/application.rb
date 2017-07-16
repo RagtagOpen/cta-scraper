@@ -6,6 +6,8 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+Dotenv.load(File.expand_path('/.env', __FILE__)) if File.exist?(File.expand_path('/.env', __FILE__))
+
 module CtaScraper
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -14,5 +16,9 @@ module CtaScraper
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    config.generators do |g|
+      g.javascript_engine :js
+    end
   end
 end
