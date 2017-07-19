@@ -13,44 +13,28 @@
 
   <body>
 
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">CTA Scraper</a>
-        </div>
+    <nav class="navbar">
+      <h1 class="title"><%= link_to 'CTA Scraper', root_path %></h1>
 
-        <ul class="nav navbar-nav navbar-right">
-          <% if current_admin %>
-            <li>
-              <%= link_to 'Sign Out', destroy_admin_session_path, method: :delete %>
-            </li>
-          <% else %>
-            <li>
-              <%= link_to 'Sign In', new_admin_session_path %>
-            </li>
-          <% end %>
-        </ul>
-
-      </div><!-- /.container-->
-    </nav>
-    <div class="container">
-      <div class="row">
-        <% flash.each do |key, value| %>
-          <div class="alert <%= bootstrap_class_for(key) %> fade in text-center margin-top-one-em">
-            <%= value %>
-          </div><!-- /alert -->
+      <div class='auth'>
+        <% if current_admin %>
+          <%= link_to 'Sign Out', destroy_admin_session_path, method: :delete %>
+        <% else %>
+          <%= link_to 'Sign In', new_admin_session_path %>
         <% end %>
-      </div> <!-- /row -->
-    </div> <!-- /container -->
+      </div>
+
+    </nav>
+    <div class="main-content">
+
+      <% flash.each do |key, value| %>
+        <div class="alert <%= flash_class_for(key) %>">
+          <%= value %>
+        </div><!-- /alert -->
+      <% end %>
 
     <%= yield %>
 
+    </div> <!-- /main-content -->
   </body>
 </html>
