@@ -1,0 +1,16 @@
+.authentication {
+  display: flex;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-flow: column nowrap;
+  
+  form {
+    align-self: center;
+  }
+
+  .actions {
+    align-self: center;
+    padding-top:2vh;
+  }
+}
+

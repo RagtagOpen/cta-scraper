@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CTA Scraper</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+
+    <nav class="navbar">
+      <h1 class="title"><%= link_to 'CTA Scraper', root_path %></h1>
+
+      <div class='auth'>
+        <% if current_admin %>
+          <%= link_to 'Sign Out', destroy_admin_session_path, method: :delete %>
+        <% else %>
+          <%= link_to 'Sign In', new_admin_session_path %>
+        <% end %>
+      </div>
+
+    </nav>
+    <div class="main-content">
+
+      <% flash.each do |key, value| %>
+        <div class="alert <%= flash_class_for(key) %>">
+          <%= value %>
+        </div><!-- /alert -->
+      <% end %>
+
+    <%= yield %>
+
+    </div> <!-- /main-content -->
+  </body>
+</html>
