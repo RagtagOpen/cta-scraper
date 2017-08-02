@@ -26,6 +26,11 @@ gem 'turbolinks', '~> 5'
 
 gem 'devise', '4.3.0'
 
+gem 'nokogiri', '1.8.0'
+gem 'httparty', '0.15.5'
+gem 'cta_aggregator_client', github: 'Ragtagteam/cta-aggregator-client-ruby'
+gem 'Indirizzo', '0.1.7'
+
 group :development, :test do
   gem 'dotenv-rails', '2.2.1'
   gem 'pry-rails', '0.3.6'
