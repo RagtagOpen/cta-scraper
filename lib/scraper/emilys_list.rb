@@ -70,7 +70,9 @@ module Scraper
       event['title'] = title
 
       date_node = find_start_date_node(title_node)
-      event['start_date'] = parse_start_date(date_node)
+      schedule_node = page.at('p:contains("Schedule")')
+      event['start_date'] = parse_start_date(date_node, schedule_node)
+
 
       if date_lumped_with_location_data?(date_node)
         location_data = parse_node_data(date_node)
@@ -81,8 +83,11 @@ module Scraper
       end
       event['location'] = parse_location(location_data)
 
+      
       event['free'] = payment_button_present?(page)
 
+      p event
+      # binding.pry
       event
     end
 
@@ -103,8 +108,63 @@ module Scraper
       end
     end
 
-    def parse_start_date(current_node)
-      date_from_node( current_node.children.first.text.strip)
+    def parse_start_date(current_node, schedule_node = nil)
+      begin
+        next_node = find_next_node(current_node)
+        if schedule_node
+          start_date = current_node.children.first.text.strip
+          start_time = schedule_near_node(schedule_node)
+        else
+          schedule = text_without_empty_lines(current_node)
+          start_date = schedule[0].text.gsub("\r\n", '')
+          start_time = schedule[1].text.gsub("\r\n", '').split('-')[0]
+        end
+
+        date_text = start_date + ' ' + start_time
+        date_from_node(date_text)
+      rescue TypeError => err
+        # TypeError: no implicit conversion of nil into String raised when unable to get value for a date_text component
+        nil
+      end
+    end
+
+    def text_without_empty_lines(node)
+      node.children.reject { |child| child.text.gsub("\r\n", '').empty? }
+    end
+
+    def time_from_text(text)
+      raw_time = text.match(/(\d+):(\d+)\s(a.m.|p.m.|AM|PM|A.M.|P.M)/)
+      raw_time[0]
+    end
+
+    def schedule_near_node(node)
+      # meant to capture html like this
+      # Schedule:
+      # 10:30 a.m. — Political Briefing
+      # 12:00 p.m. — Luncheon and Panel
+      # Occasionally the time are in first element, other times they in the elment after
+
+      schedule_text = text_without_empty_lines(node)[1]
+      if !schedule_text
+        schedule = node.next_element.children.reject { |child| child.text.gsub("\r\n", '').empty? }[1].text.gsub("\r\n", '').split('—')[0]
+      else
+        schedule = schedule_text.text.gsub("\r\n", '').split('—')[0]
+      end
+
+      if is_a_time?(schedule)
+        schedule
+      else
+        ''
+      end
+    end
+
+    def is_a_time?(possibly_a_time)
+      begin
+        Time.parse(possibly_a_time)
+        true
+      rescue ArgumentError
+        return false
+      end
     end
 
     def date_from_node(node)
