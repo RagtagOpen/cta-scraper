@@ -6,34 +6,51 @@ require 'Indirizzo'
 module Scraper
   class EmilysList
     ORIGIN_SYSTEM = "Emily's List"
+    ORIGIN_URL = "http://www.emilyslist.org/pages/entry/events"
 
     def scrape
-      raw_page = HTTParty.get("http://www.emilyslist.org/pages/entry/events")
+      raw_page = HTTParty.get(ORIGIN_URL)
       events = []
       event_links(raw_page).each do |link|
         events << events_for_page(link)
       end
-      # create_events_in_aggregator(events)
+      create_events_in_aggregator(events)
     end
 
     private
 
     def create_events_in_aggregator(events)
-      events.each do |event|
-        location_data = location_payload(event.delete('location'))
-        unless location
-        # record that payload was provided by there was trouble parsing location data
-
-        end
-        response = CTAAggregatorClient::Event.create(event, location_data)
-      end
+      events.each { |event| create_event_in_aggregator(event) }
     end
 
-    def location_payload(location_data)
+    def create_event_in_aggregator(event_data)
+      find_or_create_event(event_data)
+    rescue Exception => e
+      # Rescuing ALL exceptions is typically a terrible idea.
+      # We're doig it here because we always want to ensure the scraper can
+      # continue iterating through the list of scraped events.
+
+      p e.backtrace[1..4]
+      # record this
+    end
+
+    def find_or_create_event(event_data)
+      location = find_or_create_location(event_data.delete('location'))
+      CTAAggregatorClient::Event.create(event_data, location)
+    rescue RestClient::Found => err
+      nil
+    end
+
+    def find_or_create_location(location_data)
       response = CTAAggregatorClient::Location.create(location_data)
-      if response.status == 200 || response.status == 201
-        location = JSON.parse(response.body)['data']['id']
-        { location: location }
+      if response.code == 201
+        location_id = JSON.parse(response.body)['data']['id']
+        { location: location_id }
+      end
+    rescue RestClient::Found => err
+      if err.http_headers[:location]
+        location_id = err.http_headers[:location].split('/').last
+        { location: location_id }
       end
     end
 
@@ -83,7 +100,6 @@ module Scraper
       end
       event['location'] = parse_location(location_data)
 
-      
       event['free'] = payment_button_present?(page)
 
       p event
@@ -101,31 +117,27 @@ module Scraper
 
     def find_start_date_node(current_node)
       el = current_node.next_element
-      begin
-        el
-      rescue ArgumentError
-        el.next_element
-      end
+      el
+    rescue ArgumentError
+      el.next_element
     end
 
     def parse_start_date(current_node, schedule_node = nil)
-      begin
-        next_node = find_next_node(current_node)
-        if schedule_node
-          start_date = current_node.children.first.text.strip
-          start_time = schedule_near_node(schedule_node)
-        else
-          schedule = text_without_empty_lines(current_node)
-          start_date = schedule[0].text.gsub("\r\n", '')
-          start_time = schedule[1].text.gsub("\r\n", '').split('-')[0]
-        end
-
-        date_text = start_date + ' ' + start_time
-        date_from_node(date_text)
-      rescue TypeError => err
-        # TypeError: no implicit conversion of nil into String raised when unable to get value for a date_text component
-        nil
+      next_node = find_next_node(current_node)
+      if schedule_node
+        start_date = current_node.children.first.text.strip
+        start_time = schedule_near_node(schedule_node)
+      else
+        schedule = text_without_empty_lines(current_node)
+        start_date = schedule[0].text.gsub("\r\n", '')
+        start_time = schedule[1].text.gsub("\r\n", '').split('-')[0]
       end
+
+      date_text = start_date + ' ' + start_time
+      date_from_node(date_text)
+    rescue TypeError => err
+      # A TypeError: no implicit conversion of nil into String error will be raised when unable to get value for a date_text component
+      nil
     end
 
     def text_without_empty_lines(node)
@@ -159,12 +171,10 @@ module Scraper
     end
 
     def is_a_time?(possibly_a_time)
-      begin
-        Time.parse(possibly_a_time)
-        true
-      rescue ArgumentError
-        return false
-      end
+      Time.parse(possibly_a_time)
+      true
+    rescue ArgumentError
+      return false
     end
 
     def date_from_node(node)
@@ -172,19 +182,17 @@ module Scraper
     end
 
     def date_lumped_with_location_data?(node)
-      begin
-        trimmed_node_data = parse_node_data(node)
-        date_found = date_from_node(trimmed_node_data[0])
-        zip_from_address_found = is_zipcode?(trimmed_node_data.last.split(' ').last)
+      trimmed_node_data = parse_node_data(node)
+      date_found = date_from_node(trimmed_node_data[0])
+      zip_from_address_found = is_zipcode?(trimmed_node_data.last.split(' ').last)
 
-        return date_found && zip_from_address_found
+      return date_found && zip_from_address_found
 
-        # Exceptions are rescued when parsing date fails
-      rescue ArgumentError
-        return false
-      rescue TypeError
-        return false
-      end
+      # Exceptions are rescued when parsing date fails
+    rescue ArgumentError
+      return false
+    rescue TypeError
+      return false
     end
     
     def find_next_node(current_node)
@@ -207,7 +215,7 @@ module Scraper
         address_lines: location_data,
         locality: city_state_zip.city.first.titlecase,
         region: city_state_zip.state,
-        zipcode: city_state_zip.zip
+        postal_code: city_state_zip.zip
       }
     end
 
