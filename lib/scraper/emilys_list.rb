@@ -118,9 +118,6 @@ module Scraper
       end
       event['location'] = parse_location(location_data)
 
-
-      p event
-      # binding.pry
       event
     end
 
