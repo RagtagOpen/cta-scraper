@@ -8,8 +8,8 @@ module Scraper
     ORIGIN_SYSTEM = "Emily's List"
     ORIGIN_URL = "http://www.emilyslist.org/pages/entry/events"
     EVENT_ATTRS = [
-      :browser_url, :origin_system, :titlea, :start_date, :end_date, :free
-    ]
+      'browser_url', 'origin_system', 'title', 'description', 'start_date', 'end_date', 'free', 'featured_image_url'
+    ].freeze
 
     def initialize(scrape_fail)
       @scrape_fail = scrape_fail
@@ -48,23 +48,22 @@ module Scraper
     end
 
     def find_or_create_event(event_data)
-      location = find_or_create_location(event_data.slice('location'))
-      event = event_data.slice(EVENT_ATTRS)
       # We're gently slicing stuff, rather than deleting, since deleting
       # elements from the hash would mutate it and we want the full list of 
       # attributes in cases where scraping fails and we log those attributes
 
-      CTAAggregatorClient::Event.create(event, location)
+      event_attrs = event_data.slice(*EVENT_ATTRS)
+      location = find_or_create_location(event_data['location'])
+
+      CTAAggregatorClient::Event.create(event_attrs, location)
     rescue RestClient::Found => err
       nil
     end
 
     def find_or_create_location(location_data)
       response = CTAAggregatorClient::Location.create(location_data)
-      if response.code == 201
-        location_id = JSON.parse(response.body)['data']['id']
-        { location: location_id }
-      end
+      location_id = JSON.parse(response.body)['data']['id']
+      { location: location_id }
     rescue RestClient::Found => err
       if err.http_headers[:location]
         location_id = err.http_headers[:location].split('/').last
@@ -131,7 +130,6 @@ module Scraper
 
     def find_start_date_node(current_node)
       el = current_node.next_element
-      el
     rescue ArgumentError
       el.next_element
     end
@@ -177,11 +175,7 @@ module Scraper
         schedule = schedule_text.text.gsub("\r\n", '').split('—')[0]
       end
 
-      if is_a_time?(schedule)
-        schedule
-      else
-        ''
-      end
+      is_a_time?(schedule) ? schedule : ''
     end
 
     def is_a_time?(possibly_a_time)
