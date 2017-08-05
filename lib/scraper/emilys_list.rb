@@ -7,17 +7,26 @@ module Scraper
   class EmilysList
     ORIGIN_SYSTEM = "Emily's List"
     ORIGIN_URL = "http://www.emilyslist.org/pages/entry/events"
+    EVENT_ATTRS = [
+      :browser_url, :origin_system, :titlea, :start_date, :end_date, :free
+    ]
 
+    def initialize(scrape_fail)
+      @scrape_fail = scrape_fail
+    end
+    
     def scrape
       raw_page = HTTParty.get(ORIGIN_URL)
       events = []
-      event_links(raw_page).each do |link|
+      event_urls(raw_page).each do |link|
         events << events_for_page(link)
       end
       create_events_in_aggregator(events)
     end
 
     private
+
+    attr_reader :scrape_fail
 
     def create_events_in_aggregator(events)
       events.each { |event| create_event_in_aggregator(event) }
@@ -26,17 +35,26 @@ module Scraper
     def create_event_in_aggregator(event_data)
       find_or_create_event(event_data)
     rescue Exception => e
-      # Rescuing ALL exceptions is typically a terrible idea.
-      # We're doig it here because we always want to ensure the scraper can
+      # Rescuing all exceptions is typically a terrible idea.
+      # We're doing it here because we always want to ensure the scraper can
       # continue iterating through the list of scraped events.
 
-      p e.backtrace[1..4]
-      # record this
+      scrape_fail.create!(
+        status_code: e.http_code,
+        message: e.message,
+        backtrace: e.backtrace[1..4],
+        event_attrs: event_data
+      )
     end
 
     def find_or_create_event(event_data)
-      location = find_or_create_location(event_data.delete('location'))
-      CTAAggregatorClient::Event.create(event_data, location)
+      location = find_or_create_location(event_data.slice('location'))
+      event = event_data.slice(EVENT_ATTRS)
+      # We're gently slicing stuff, rather than deleting, since deleting
+      # elements from the hash would mutate it and we want the full list of 
+      # attributes in cases where scraping fails and we log those attributes
+
+      CTAAggregatorClient::Event.create(event, location)
     rescue RestClient::Found => err
       nil
     end
@@ -54,9 +72,9 @@ module Scraper
       end
     end
 
-    def event_links(raw_page)
+    def event_urls(raw_page)
       page = Nokogiri::HTML(raw_page)
-      events = []
+      urls = []
       page.xpath('//h2[text()="Upcoming Events"]/following-sibling::p').each do |p|
 
         date_and_location = p.css('strong').first
@@ -69,10 +87,10 @@ module Scraper
 
         # past events link to flickr sets, not event pages
         if /secure\.emilyslist\.org/ =~ event_url
-          events << p.css('a').first.attributes['href'].value
+          urls << p.css('a').first.attributes['href'].value
         end
       end
-      events
+      urls
     end
 
     def events_for_page(link)
@@ -89,7 +107,7 @@ module Scraper
       date_node = find_start_date_node(title_node)
       schedule_node = page.at('p:contains("Schedule")')
       event['start_date'] = parse_start_date(date_node, schedule_node)
-
+      event['free'] = payment_button_present?(page)
 
       if date_lumped_with_location_data?(date_node)
         location_data = parse_node_data(date_node)
@@ -100,7 +118,6 @@ module Scraper
       end
       event['location'] = parse_location(location_data)
 
-      event['free'] = payment_button_present?(page)
 
       p event
       # binding.pry

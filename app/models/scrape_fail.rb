@@ -1,0 +1,2 @@
+class ScrapeFail < ApplicationRecord
+end
