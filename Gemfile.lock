@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/Ragtagteam/cta-aggregator-client-ruby.git
-  revision: 1ffc86a517952f4ab7ffec7dd22d6f590ae61842
-  specs:
-    cta_aggregator_client (0.1.0)
-      rest-client (= 2.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -53,6 +46,8 @@ GEM
     byebug (9.0.6)
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
+    cta_aggregator_client (0.1.0)
+      rest-client (= 2.0.1)
     devise (4.3.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -219,7 +214,7 @@ PLATFORMS
 
 DEPENDENCIES
   Indirizzo (= 0.1.7)
-  cta_aggregator_client!
+  cta_aggregator_client (= 0.1.0)
   devise (= 4.3.0)
   dotenv-rails (= 2.2.1)
   httparty (= 0.15.5)
