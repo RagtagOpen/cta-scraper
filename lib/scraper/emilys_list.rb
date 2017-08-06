@@ -104,6 +104,9 @@ module Scraper
       date_node = find_start_date_node(title_node)
       schedule_node = page.at('p:contains("Schedule")')
       event['start_date'] = parse_start_date(date_node, schedule_node)
+
+      event['free'] = payment_button_present?(page)
+
       if date_lumped_with_location_data?(date_node)
         location_data = parse_node_data(date_node)
         location_data.shift
