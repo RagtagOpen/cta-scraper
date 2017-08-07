@@ -41,7 +41,7 @@ module Scraper
         status_code: e.http_code,
         message: e.message,
         backtrace: e.backtrace[1..4],
-        event_attrs: event_data
+        scrape_attrs: event_data
       )
     end
 

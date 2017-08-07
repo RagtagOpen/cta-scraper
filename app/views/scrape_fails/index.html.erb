@@ -1,0 +1,75 @@
+<h1> Failures </h1>
+
+<div class='guide-text-container'>
+  <div class='guide-text'>
+    <p>
+    The items below represent failed attempts to scrape a website and generate data in the CTAAggregagor API.
+    </p>
+    <p>
+    Once you have fixed the cause of the scraping error, please dismiss the error.  This will perform a soft delete and he record won't appear below anymore.
+    </p>
+  </div>
+</div>
+
+<div class='scrape-fails'>
+
+<table>
+  <tr>
+    <th>
+      Scrape Date
+    </th>
+
+    <th>
+      Status Code
+    </th>
+
+    <th>
+      Message
+    </th>
+  
+    <th>
+      Origin System
+    </th>
+
+    <th>
+      URL
+    </th>
+
+    <th>
+      Actions
+    </th>
+
+  </tr>
+  <% @scrape_fails.each do |scrape_fail| %>
+
+    <tr>
+      <td>
+        <%= scrape_fail.created_at.strftime('%b %d, %Y %l:%M %p') %>
+      </td>
+
+      <td>
+        <%= scrape_fail.status_code %>
+      </td>
+
+      <td>
+        <%= scrape_fail.message %>
+      </td>
+
+      <td>
+        <%= scrape_fail.scrape_attrs['origin_system'] %>
+      </td>
+
+      <td class='url'>
+        <%= scrape_fail.scrape_attrs['browser_url'] %>
+      </td>
+
+      <td>
+        <%= link_to 'View', scrape_fail_path(scrape_fail.id) %>
+        <%= link_to 'Dismiss', scrape_fail_path(scrape_fail.id, scrape_fail: { active: false } ), method: :put, data: {confirm: "Are you sure?"}  %>
+      </td>
+
+    </tr>
+  <% end %>
+</table>
+
+</div>
