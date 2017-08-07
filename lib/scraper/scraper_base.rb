@@ -1,4 +1,4 @@
-require 'Indirizzo'
+require 'indirizzo/address'
 require 'nokogiri'
 require 'httparty'
 require 'cta_aggregator_client'
