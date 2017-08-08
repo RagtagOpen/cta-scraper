@@ -2,10 +2,8 @@ class ScrapeFailsController < ApplicationController
   before_action :authenticate_admin!
 
   def index
-    @scrape_fails = ScrapeFail.active
-    #paginage that shit
+    @scrape_fails = ScrapeFail.active.paginate(page: params[:page], per_page: 20)
   end
-
 
   def show
     @scrape_fail = ScrapeFail.find_by_id(params[:id])

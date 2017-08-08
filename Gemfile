@@ -30,6 +30,7 @@ gem 'nokogiri', '1.8.0'
 gem 'httparty', '0.15.5'
 gem 'cta_aggregator_client', '0.1.0'
 gem 'Indirizzo', '0.1.7'
+gem 'will_paginate', '3.1.6'
 
 group :development, :test do
   gem 'dotenv-rails', '2.2.1'
