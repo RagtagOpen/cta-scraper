@@ -44,7 +44,6 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  text-align:center;
   font-size: 1.5rem;
 }
 
@@ -93,3 +92,19 @@ input[type=submit] {
   cursor: pointer;
   border-radius: 5px;
 }
+
+  .guide-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5vh;
+
+    .guide-text {
+      background-color: lightgrey;
+      max-width: 75%;
+      flex-flow: column wrap;
+      border-radius: 2vw;
+      padding: 0 1%;
+      text-align: center;
+    }
+  }

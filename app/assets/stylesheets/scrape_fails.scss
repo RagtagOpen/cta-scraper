@@ -1,0 +1,65 @@
+.scrape-fails {
+  table {
+    text-align: center;
+
+    .url {
+      text-align: left;
+    }
+  }
+
+  .pagination-links {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vh;
+  }
+}
+
+.scrape-fail-details {
+
+  .guide-text-container {
+    margin-top: 5vh;
+  }
+
+  .row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row nowrap;
+    text-align: left;
+    margin-bottom: 3vh;
+
+    .heading {
+      padding-left: 5vw;
+      min-width: 15%;
+      font-weight: bold;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-flow: column nowrap;
+    padding-left: 0;
+    margin-top: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      justify-content: flex-start;
+
+      .scrape-attr {
+        font-weight: bold;
+      }
+    }
+
+    .backtrace-line {
+      padding-top: 2vh;
+
+    }
+  }
+
+  .guide-text {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+}
+

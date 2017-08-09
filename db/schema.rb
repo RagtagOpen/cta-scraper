@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170805033150) do
+ActiveRecord::Schema.define(version: 20170807030919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,10 +35,11 @@ ActiveRecord::Schema.define(version: 20170805033150) do
   create_table "scrape_fails", force: :cascade do |t|
     t.string "status_code"
     t.string "message"
-    t.text "backtrace"
-    t.text "event_attrs"
+    t.text "backtrace", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "scrape_attrs", default: {}
+    t.boolean "active", default: true
   end
 
 end
