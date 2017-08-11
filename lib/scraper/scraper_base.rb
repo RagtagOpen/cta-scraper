@@ -6,6 +6,14 @@ require 'cta_aggregator_client'
 module Scraper
   class ScraperBase
 
+    def initialize(scrape_fail)
+      @scrape_fail = scrape_fail
+    end
+
+    private
+
+    attr_reader :scrape_fail
+
     def find_next_node(current_node)
       el = current_node.next_element
 
@@ -41,6 +49,15 @@ module Scraper
     def load_webpage(link)
       raw_page = HTTParty.get(link)
       Nokogiri::HTML(raw_page)
+    end
+
+    def log_scrape_failure(e, scrape_attrs)
+      scrape_fail.create!(
+        status_code: e.http_code,
+        message: e.http_body,
+        backtrace: e.backtrace[1..4],
+        scrape_attrs: scrape_attrs
+      )
     end
   end
 end
