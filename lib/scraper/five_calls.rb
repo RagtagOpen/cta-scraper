@@ -9,7 +9,7 @@ module Scraper
     CAMPAIGN_ATTRS = [
       'browser_url', 'origin_system', 'title', 'description', 'template', 'action_type'
     ]
-    ACTION_TYPE = 'action_type'
+    ACTION_TYPE = 'phone'
 
     def scrape
       campaigns = []
@@ -28,9 +28,7 @@ module Scraper
       campaign['description'] = issue['reason']
       campaign['template'] = issue['script']
       campaign['targets'] = parse_targets(issue['contacts'])
-          
       campaign['identifiers'] = ["#{ORIGIN_SYSTEM}:#{issue['id']}"]
-      # ^ yes?
       campaign.reject{ |k,v| v.empty? }
     end
 
@@ -79,7 +77,8 @@ module Scraper
     end
 
     def is_department?(text)
-      if text =~ /dep[^"\r\n]*\sof\s"]/i
+      # e.g. "Department of Justice"
+      if text =~ /dep[^"\r\n]*\sof\s"/i
         true
       end
     end
@@ -91,7 +90,6 @@ module Scraper
         full_name_and_organization = data['name'].split(',')
 
         # Sometimes 5Calls pops in a department but no user
-        # e.g. "Department of Justice"
         if is_department?(full_name_and_organization[0])
           target['organization'] = full_name_and_organization[0]
         else
