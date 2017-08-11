@@ -1,7 +1,5 @@
 require 'scraper/scraper_base'
 
-require 'pry'
-
 module Scraper
   class FiveCalls < ScraperBase
     ORIGIN_SYSTEM = '5Calls'
