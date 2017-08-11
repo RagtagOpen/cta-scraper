@@ -9,10 +9,6 @@ module Scraper
       'browser_url', 'origin_system', 'title', 'description', 'start_date', 'end_date', 'free', 'featured_image_url'
     ].freeze
 
-    def initialize(scrape_fail)
-      @scrape_fail = scrape_fail
-    end
-    
     def scrape
       raw_page = HTTParty.get(ORIGIN_URL)
       events = []
@@ -21,10 +17,6 @@ module Scraper
       end
       create_events_in_aggregator(events)
     end
-
-    private
-
-    attr_reader :scrape_fail
 
     def create_events_in_aggregator(events)
       events.each { |event| create_event_in_aggregator(event) }

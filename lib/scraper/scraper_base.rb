@@ -6,6 +6,14 @@ require 'cta_aggregator_client'
 module Scraper
   class ScraperBase
 
+    def initialize(scrape_fail)
+      @scrape_fail = scrape_fail
+    end
+
+    private
+
+    attr_reader :scrape_fail
+
     def find_next_node(current_node)
       el = current_node.next_element
 
