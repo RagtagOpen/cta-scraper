@@ -50,5 +50,14 @@ module Scraper
       raw_page = HTTParty.get(link)
       Nokogiri::HTML(raw_page)
     end
+    
+    def log_scrape_failure(e, scrape_attrs)
+      scrape_fail.create!(
+        status_code: e.http_code,
+        message: e.http_body,
+        backtrace: e.backtrace[1..4],
+        scrape_attrs: scrape_attrs
+      )
+    end
   end
 end

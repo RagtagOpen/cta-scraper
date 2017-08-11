@@ -45,12 +45,7 @@ module Scraper
       # We're doing it here because we always want to ensure the scraper can
       # continue iterating through the list of scraped campaigns.
 
-      scrape_fail.create!(
-        status_code: e.http_code,
-        message: e.message,
-        backtrace: e.backtrace[1..4],
-        scrape_attrs: campaign_data
-      )
+      log_scrape_failure(e, campaign_data)
     end
 
     def find_or_create_campaign(campaign_data)

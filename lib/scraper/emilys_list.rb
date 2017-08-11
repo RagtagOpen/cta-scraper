@@ -29,12 +29,7 @@ module Scraper
       # We're doing it here because we always want to ensure the scraper can
       # continue iterating through the list of scraped events.
 
-      scrape_fail.create!(
-        status_code: e.http_code,
-        message: e.message,
-        backtrace: e.backtrace[1..4],
-        scrape_attrs: event_data
-      )
+      log_scrape_failure(e, event_data)
     end
 
     def find_or_create_event(event_data)
