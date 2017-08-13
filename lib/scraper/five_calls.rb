@@ -5,7 +5,7 @@ module Scraper
     ORIGIN_SYSTEM = '5Calls'
     ORIGIN_URL = 'https://5calls.org/issues/'
     CAMPAIGN_ATTRS = [
-      'browser_url', 'origin_system', 'title', 'description', 'template', 'action_type'
+      'browser_url', 'origin_system', 'title', 'description', 'template', 'action_type', 'identifiers'
     ]
     ACTION_TYPE = 'phone'
 
