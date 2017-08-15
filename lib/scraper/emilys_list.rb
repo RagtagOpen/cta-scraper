@@ -4,10 +4,10 @@ module Scraper
   class EmilysList < ScraperBase
 
     ORIGIN_SYSTEM = "Emily's List"
-    SYSTEM_NAME = "emilys_list"
+    SYSTEM_NAME = "emilys-list"
     ORIGIN_URL = "http://www.emilyslist.org/pages/entry/events"
     EVENT_ATTRS = [
-      'browser_url', 'origin_system', 'title', 'description', 'start_date', 'end_date', 'free', 'featured_image_url'
+      'browser_url', 'origin_system', 'title', 'description', 'start_date', 'end_date', 'free', 'featured_image_url', 'identifiers'
     ].freeze
 
     def scrape

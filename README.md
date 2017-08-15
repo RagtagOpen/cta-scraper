@@ -19,6 +19,11 @@ this command:
 will scrape everything available on Emily's List.  Failures will be stored in the DB, so that we
 know when scraper scripts need to be updated.
 
+Scraper rake tasks can be found in `lib/tasks/scraper.rake`. To run all the scrapers, the following command.
+```
+rake scape:all
+```
+
 # Admins
 
 There is a rake task for creating an admin. You'll need to pass an email and a password as arguments.

@@ -5,7 +5,7 @@ module Scraper
     ORIGIN_SYSTEM = '5Calls'
     ORIGIN_URL = 'https://5calls.org/issues/'
     CAMPAIGN_ATTRS = [
-      'browser_url', 'origin_system', 'title', 'description', 'template', 'action_type'
+      'browser_url', 'origin_system', 'title', 'description', 'template', 'action_type', 'identifiers'
     ]
     ACTION_TYPE = 'phone'
 
@@ -74,13 +74,6 @@ module Scraper
       end
     end
 
-    def is_department?(text)
-      # e.g. "Department of Justice"
-      if text =~ /dep[^"\r\n]*\sof\s"/i
-        true
-      end
-    end
-
     def parse_targets(target_data = [])
       target_data.map do |data|
         target = Hash.new
@@ -88,19 +81,34 @@ module Scraper
         full_name_and_organization = data['name'].split(',')
 
         # Sometimes 5Calls pops in a department but no user
-        if is_department?(full_name_and_organization[0])
+        if is_department_or_committee?(full_name_and_organization[0])
+
           target['organization'] = full_name_and_organization[0]
         else
           full_name = full_name_and_organization[0].split(' ')
 
           target['organization'] = full_name_and_organization[1]
           target['given_name'] = full_name.shift
-          target['family_name'] = full_name
+          target['family_name'] = full_name[0]
         end
 
         target['phone_numbers'] = [ primary: true, number: data['phone'], number_type: :work ]
         target.reject{ |k,v| v.nil? }
       end
+    end
+
+    def is_committee?(text)
+      # e.g. "Senate Committee on Health Education"
+      text =~ /committee/i
+    end
+
+    def is_department?(text)
+      # e.g. "Department of Justice"
+      text =~ /dep[^"\r\n]*\sof\s"/i
+    end
+
+    def is_department_or_committee?(text)
+      is_department?(text) || is_committee?(text) 
     end
 
     def issues
