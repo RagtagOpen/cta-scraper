@@ -14,7 +14,7 @@ module Scraper
       raw_page = HTTParty.get(ORIGIN_URL)
       events = []
       event_urls(raw_page).each do |link|
-        events << events_for_page(link)
+        events << parse_event(link)
       end
       create_events_in_aggregator(events)
     end
@@ -78,7 +78,7 @@ module Scraper
       urls
     end
 
-    def events_for_page(link)
+    def parse_event(link)
       page = load_webpage(link)
 
       event = Hash.new
