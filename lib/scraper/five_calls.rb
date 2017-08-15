@@ -22,9 +22,9 @@ module Scraper
       campaign['action_type'] = ACTION_TYPE
       campaign['origin_system'] = ORIGIN_SYSTEM
       campaign['browser_url'] = issue['link'] #might be blank
-      campaign['title'] = issue['name']
-      campaign['description'] = issue['reason']
-      campaign['template'] = issue['script']
+      campaign['title'] = parse_text(issue['name'])
+      campaign['description'] = parse_text(issue['reason'])
+      campaign['template'] = parse_text(issue['script'])
       campaign['targets'] = parse_targets(issue['contacts'])
       campaign['identifiers'] = ["#{ORIGIN_SYSTEM}:#{issue['id']}"]
       campaign.reject{ |k,v| v.empty? }
