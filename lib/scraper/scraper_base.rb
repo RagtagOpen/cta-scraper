@@ -14,6 +14,10 @@ module Scraper
 
     attr_reader :scrape_fail
 
+    def parse_text(text=nil)
+      text.nil? ? text : text.strip
+    end
+
     def find_next_node(current_node)
       el = current_node.next_element
 
