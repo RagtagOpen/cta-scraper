@@ -4,7 +4,13 @@ admin.save
 
 ScrapeFail.create!(
   "status_code"=>"500",
-  "message"=>"500 Internal Server Error",
+  "message"=>
+  {
+    "status": 500,
+    "error": "Internal Server Error",
+    "exception": "#\u003cStandardError: StandardError\u003e",
+    "traces": { "Application Trace": [{ "id": 0, "trace": "app/controllers/v1/advocacy_campaigns_controller.rb:6:in `create'" }] }
+  },
   "backtrace"=>
   ["/Users/goober/.rbenv/versions/2.4.0/lib/ruby/gems/2.4.0/gems/rest-client-2.0.1/lib/restclient/abstract_response.rb:103:in `return!'",
    "/Users/goober/.rbenv/versions/2.4.0/lib/ruby/gems/2.4.0/gems/rest-client-2.0.1/lib/restclient/request.rb:809:in `process_result'",
