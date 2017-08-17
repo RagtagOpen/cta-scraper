@@ -1,0 +1,82 @@
+<div class="scrape-fail-details">
+
+  <div class='guide-text-container'>
+    <div class='guide-text'>
+      <p>
+      This is a brief overview on what went wrong when attempting pull data from
+      a website and send it over the CTA Aggregator API.
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="heading">
+      Scrape Date
+    </div>
+
+    <div class="info"> <%= @scrape_fail.created_at.strftime('%b %d, %Y %l:%M %p') %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="heading">
+      Status Code
+    </div>
+
+    <div class="info">
+      <%= @scrape_fail.status_code %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="heading">
+      Error Message
+    </div>
+
+    <div class="info">
+      <%= @scrape_fail.message %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="heading">
+      Partial Backtrace
+    </div>
+
+    <div class="info">
+
+      <ul>
+        <% @scrape_fail.backtrace.each do |line| %>
+          <li class='backtrace-line'>
+            <%= line %>
+          </li>
+        <% end %>
+        <ul>
+
+        <div class='guide-text'>
+          <p>
+          Note: this only represents the first few lines of the backtrace.
+          To get the full backtrace, please reproduce this error locally.
+          </p>
+        </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="heading">
+      Scraped Attributes
+    </div>
+
+    <div class="info">
+
+      <ul>
+        <% @scrape_fail.scrape_attrs.each do |k, v | %>
+          <li>
+            <div class='scrape-attr'><%= k %>: &nbsp</div> <%= v %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+</div>

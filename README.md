@@ -5,6 +5,24 @@ action (CTAs). It has 2 main components
 1. Scrape sites and send the results to the  CTAAggregator API.
 2. Admin Panel to display unsucessful scraping attempts (alerting admins that the sraper scripts need to be updated)
 
+# Scrapers
+
+Code for scraping websites is more "Mr. Right Now" than "Mr. Right." We anticipate periodic changes on the
+websites that this app scrapes.  For that reason, the code quality isn't very high and may not always
+demonstrate best practices.  In addition, there is no test coverage.
+
+If you plan to contribute a scraper, then please ensure that there's a rake task that runs your code.  For instance,
+this command:
+   ```
+   rake scape:emilys_list
+   ```
+will scrape everything available on Emily's List.  Failures will be stored in the DB, so that we
+know when scraper scripts need to be updated.
+
+Scraper rake tasks can be found in `lib/tasks/scraper.rake`. To run all the scrapers, the following command.
+```
+rake scape:all
+```
 
 # Admins
 
