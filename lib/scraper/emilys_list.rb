@@ -40,8 +40,9 @@ module Scraper
 
       event_attrs = event_data.slice(*EVENT_ATTRS)
       location = find_or_create_location(event_data['location'])
+      event_attrs.merge!(location)
 
-      CTAAggregatorClient::Event.create(event_attrs, location)
+      CTAAggregatorClient::Event.create(event_attrs)
     rescue RestClient::Found => err
       nil
     end
