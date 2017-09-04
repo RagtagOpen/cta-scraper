@@ -51,8 +51,9 @@ module Scraper
 
       campaign_attrs = campaign_data.slice(*CAMPAIGN_ATTRS)
       targets = find_or_create_targets(campaign_data['targets'])
+      campaign_attrs.merge!(targets)
 
-      CTAAggregatorClient::AdvocacyCampaign.create(campaign_attrs, targets)
+      CTAAggregatorClient::AdvocacyCampaign.create(campaign_attrs)
     rescue RestClient::Found => err
       nil
     end

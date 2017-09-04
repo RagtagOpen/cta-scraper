@@ -47,7 +47,9 @@ module Scraper
     end
 
     def parse_node_data(node_data)
-      node_data.children.map { |data| data.text.strip  }.reject(&:empty?)
+      if node_data.children
+        node_data.children.map { |data| data.text.strip  }.reject(&:empty?)
+      end
     end
 
     def load_webpage(link)
@@ -56,12 +58,20 @@ module Scraper
     end
 
     def log_scrape_failure(e, scrape_attrs)
-      scrape_fail.create!(
-        status_code: e.http_code,
-        message: e.http_body,
-        backtrace: e.backtrace[1..4],
-        scrape_attrs: scrape_attrs
-      )
+      if e.try(:http_code)
+        scrape_fail.create!(
+          status_code: e.http_code,
+          message: e.http_body,
+          backtrace: e.backtrace[1..4],
+          scrape_attrs: scrape_attrs
+        )
+      else
+        # catches scraping errors raised prior to making req to API.
+        scrape_fail.create!(
+          message: e,
+          scrape_attrs: scrape_attrs
+        )
+      end
     end
   end
 end

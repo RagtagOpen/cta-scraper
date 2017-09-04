@@ -40,8 +40,9 @@ module Scraper
 
       event_attrs = event_data.slice(*EVENT_ATTRS)
       location = find_or_create_location(event_data['location'])
+      event_attrs.merge!(location)
 
-      CTAAggregatorClient::Event.create(event_attrs, location)
+      CTAAggregatorClient::Event.create(event_attrs)
     rescue RestClient::Found => err
       nil
     end
@@ -92,8 +93,10 @@ module Scraper
 
       date_node = find_start_date_node(title_node)
       schedule_node = page.at('p:contains("Schedule")')
-      event['start_date'] = parse_start_date(date_node, schedule_node)
+      start_date = parse_start_date(date_node, schedule_node)
+      return unless start_date
 
+      event['start_date'] = start_date
       event['free'] = payment_button_present?(page)
 
       if date_lumped_with_location_data?(date_node)
@@ -130,12 +133,12 @@ module Scraper
       else
         schedule = text_without_empty_lines(current_node)
         start_date = schedule[0].text.gsub("\r\n", '')
-        start_time = schedule[1].text.gsub("\r\n", '').split('-')[0]
+        start_time = schedule[1].text.gsub("\r\n", '').split('-')[0] unless schedule[1].nil?
       end
 
-      date_text = start_date + ' ' + start_time
+      date_text = "#{start_date} #{start_time}"
       date_from_node(date_text)
-    rescue TypeError => err
+    rescue TypeError, ArgumentError => err
       # A TypeError: no implicit conversion of nil into String error will be raised when unable to get value for a date_text component
       nil
     end
