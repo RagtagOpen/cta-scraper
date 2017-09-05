@@ -46,7 +46,7 @@ GEM
     byebug (9.0.6)
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
-    cta_aggregator_client (0.1.0)
+    cta_aggregator_client (0.4.0)
       rest-client (= 2.0.1)
     devise (4.3.0)
       bcrypt (~> 3.0)
@@ -215,7 +215,7 @@ PLATFORMS
 
 DEPENDENCIES
   Indirizzo (= 0.1.7)
-  cta_aggregator_client (= 0.1.0)
+  cta_aggregator_client (= 0.4.0)
   devise (= 4.3.0)
   dotenv-rails (= 2.2.1)
   httparty (= 0.15.5)
