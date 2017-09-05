@@ -69,6 +69,7 @@ module Scraper
         # catches scraping errors raised prior to making req to API.
         scrape_fail.create!(
           message: e,
+          backtrace: e.backtrace[1..4],
           scrape_attrs: scrape_attrs
         )
       end
