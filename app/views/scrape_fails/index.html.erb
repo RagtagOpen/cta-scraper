@@ -52,15 +52,15 @@
       </td>
 
       <td>
-        <%= scrape_fail.message.values.first %>
+        <%= scrape_fail.message.is_a?(Hash) ? scrape_fail.message.values.first : scrape_fail.message %>
       </td>
 
       <td>
-        <%= scrape_fail.scrape_attrs['origin_system'] %>
+        <%= scrape_fail.scrape_attrs ? scrape_fail.scrape_attrs['origin_system'] : "Not Found"%>
       </td>
 
       <td class='url'>
-        <%= scrape_fail.scrape_attrs['browser_url'] %>
+        <%= scrape_fail.scrape_attrs ? scrape_fail.scrape_attrs['browser_url'] : "Not found" %>
       </td>
 
       <td>
