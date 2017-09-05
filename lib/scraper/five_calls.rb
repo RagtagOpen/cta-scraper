@@ -59,7 +59,7 @@ module Scraper
     end
 
     def find_or_create_targets(targets)
-      return unless targets
+      return {} unless targets
       target_ids = targets.map { |target_data| find_or_create_target(target_data) }
       { targets: target_ids }
     end
