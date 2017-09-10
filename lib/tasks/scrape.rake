@@ -14,5 +14,10 @@ namespace :scrape do
   task :five_calls => :environment do
     Scraper.five_calls.scrape
   end
+  
+  # bundle exec rake scrape:resistance_calendar  --trace
+  task :resistance_calendar => :environment do
+    Scraper.resistance_calendar.scrape
+  end
 
 end
