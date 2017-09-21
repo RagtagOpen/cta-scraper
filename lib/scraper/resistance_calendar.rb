@@ -8,9 +8,6 @@ module Scraper
     ORIGIN_SYSTEM = "Resistance Calendar"
     SYSTEM_NAME = "resistance-calendar"
     ORIGIN_URL = "https://resistance-calendar.herokuapp.com/v1/events"
-    EVENT_ATTRS = [
-      'browser_url', 'origin_system', 'title', 'description', 'start_date', 'end_date', 'free', 'featured_image_url', 'identifiers'
-    ].freeze
     
     def scrape
       osdi = Hyperclient.new(ORIGIN_URL)
