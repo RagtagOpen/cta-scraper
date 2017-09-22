@@ -6,10 +6,14 @@ require 'cta_aggregator_client'
 module Scraper
   class ScraperBase
 
+    EVENT_ATTRS = [
+      'browser_url', 'origin_system', 'title', 'description', 'start_date', 'end_date', 'free', 'featured_image_url', 'identifiers'
+    ].freeze
+    
     def initialize(scrape_fail)
       @scrape_fail = scrape_fail
     end
-
+    
     private
 
     attr_reader :scrape_fail
@@ -74,5 +78,31 @@ module Scraper
         )
       end
     end
+    
+    def create_events_in_aggregator(events)
+      events.each { |event| create_event_in_aggregator(event) }
+    end
+    
+    def create_event_in_aggregator(event_data)
+      find_or_create_event(event_data)
+    rescue Exception => e
+      # Rescuing all exceptions is typically a terrible idea.
+      # We're doing it here because we always want to ensure the scraper can
+      # continue iterating through the list of scraped events.
+
+      log_scrape_failure(e, event_data)
+    end
+
+    def find_or_create_location(location_data)
+      response = CTAAggregatorClient::Location.create(location_data)
+      location_id = JSON.parse(response.body)['data']['id']
+      { location: location_id }
+    rescue RestClient::Found => err
+      if err.http_headers[:location]
+        location_id = err.http_headers[:location].split('/').last
+        { location: location_id }
+      end
+    end
+    
   end
 end

@@ -20,23 +20,9 @@ module Scraper
       create_events_in_aggregator(events)
     end
 
-    def create_events_in_aggregator(events)
-      events.each { |event| create_event_in_aggregator(event) }
-    end
-
-    def create_event_in_aggregator(event_data)
-      find_or_create_event(event_data)
-    rescue Exception => e
-      # Rescuing all exceptions is typically a terrible idea.
-      # We're doing it here because we always want to ensure the scraper can
-      # continue iterating through the list of scraped events.
-
-      log_scrape_failure(e, event_data)
-    end
-
     def find_or_create_event(event_data)
       # We're gently slicing stuff, rather than deleting, since deleting
-      # elements from the hash would mutate it and we want the full list of 
+      # elements from the hash would mutate it and we want the full list of
       # attributes in cases where scraping fails and we log those attributes
 
       event_attrs = event_data.slice(*EVENT_ATTRS)
@@ -46,17 +32,6 @@ module Scraper
       CTAAggregatorClient::Event.create(event_attrs)
     rescue RestClient::Found => err
       nil
-    end
-
-    def find_or_create_location(location_data)
-      response = CTAAggregatorClient::Location.create(location_data)
-      location_id = JSON.parse(response.body)['data']['id']
-      { location: location_id }
-    rescue RestClient::Found => err
-      if err.http_headers[:location]
-        location_id = err.http_headers[:location].split('/').last
-        { location: location_id }
-      end
     end
 
     def event_urls(raw_page)

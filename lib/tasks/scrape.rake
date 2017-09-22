@@ -5,6 +5,7 @@ namespace :scrape do
   task :all => :environment do
     Scraper.emilys_list.scrape
     Scraper.five_calls.scrape
+    Scraper.resistance_calendar.scrape
   end
 
   task :emilys_list => :environment do
@@ -13,6 +14,10 @@ namespace :scrape do
 
   task :five_calls => :environment do
     Scraper.five_calls.scrape
+  end
+  
+  task :resistance_calendar => :environment do
+    Scraper.resistance_calendar.scrape
   end
 
 end
