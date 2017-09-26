@@ -17,7 +17,7 @@ namespace :scrape do
   end
   
   task :resistance_calendar => :environment do
-    Scraper.resistance_calendar.scrape
+    Scraper.resistance_calendar.scrape(page: 'all')
   end
 
 end

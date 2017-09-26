@@ -9,9 +9,25 @@ module Scraper
     SYSTEM_NAME = "resistance-calendar"
     ORIGIN_URL = "https://resistance-calendar.herokuapp.com/v1/events"
     
-    def scrape
-      osdi = Hyperclient.new(ORIGIN_URL)
-      create_events_in_aggregator( osdi['osdi:events'] )
+    def scrape(page: 1)
+      if page == 'all'
+        i = 1
+        loop do
+          url = "#{ORIGIN_URL}?page=#{i}"
+          osdi = Hyperclient.new(url)
+          if osdi['osdi:events'].blank?
+            break
+          else
+            create_events_in_aggregator( osdi['osdi:events'] )
+          end
+          i += 1
+        end
+      else
+        url = "#{ORIGIN_URL}?page=#{page}"
+        osdi = Hyperclient.new(url)
+        create_events_in_aggregator( osdi['osdi:events'] )
+      end
+      
     end
     
     # this needs to be here, and not in scraper_base, because we can only use a subset of the location data from resistance cal
