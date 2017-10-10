@@ -21,6 +21,7 @@ module CtaScraper
       g.javascript_engine :js
     end
 
+    config.autoload_paths << Rails.root.join('lib')
 
     config.sass.preferred_syntax = :scss
   end
