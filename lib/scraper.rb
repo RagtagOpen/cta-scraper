@@ -16,5 +16,9 @@ module Scraper
     def resistance_calendar
       ResistanceCalendar.new(ScrapeFail)
     end
+
+    def manual_input_sheet
+      ManualInputSheet.new(ScrapeFail)
+    end
   end
 end
