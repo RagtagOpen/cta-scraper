@@ -35,6 +35,9 @@ module Scraper
       event_attrs = event_data._attributes.to_h.slice(*EVENT_ATTRS)
       
       if ed = event_data['location']
+
+        return if ineligible_location(ed)
+
         location_hash = {address_lines: ed['address_lines'], locality: ed['locality'], region: ed['region'], postal_code: ed['postal_code'], venue: ed['venue']}
         location = find_or_create_location( location_hash )   
         event_attrs.merge!(location) 
@@ -44,6 +47,12 @@ module Scraper
     rescue RestClient::Found => err
       nil
     end
-    
+
+    def ineligible_location(event_data)
+      # Resistance Calendar occasionally pops in events from Australia
+      (event_data['region'] && event_data['region'].length > 2) || 
+        (event_data['postal_code'] && event_data['postal_code'].length < 5)
+    end
+
   end
 end
