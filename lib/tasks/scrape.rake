@@ -3,7 +3,8 @@ require 'scraper'
 namespace :scrape do
 
   task :all => :environment do
-    Scraper.emilys_list.scrape
+    # Silencing Emily's list b/c very few CTAs and HTML shifts a lot
+    # Scraper.emilys_list.scrape
     Scraper.five_calls.scrape
     Scraper.resistance_calendar.scrape
   end
