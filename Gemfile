@@ -32,6 +32,7 @@ gem 'hyperclient', '0.8.6'
 gem 'cta_aggregator_client', '0.4.0'
 gem 'Indirizzo', '0.1.7'
 gem 'will_paginate', '3.1.6'
+gem 'google_drive', '~> 2.1.6'
 
 group :development, :test do
   gem 'dotenv-rails', '2.2.1'
