@@ -26,7 +26,7 @@ gem 'turbolinks', '~> 5'
 
 gem 'devise', '4.3.0'
 
-gem 'nokogiri', '1.8.0'
+gem 'nokogiri', '~> 1.8.2'
 gem 'httparty', '0.15.5'
 gem 'hyperclient', '0.8.6'
 gem 'cta_aggregator_client', '0.4.0'
