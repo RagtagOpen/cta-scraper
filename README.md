@@ -1,3 +1,7 @@
+:warning: App no longer active :warning:
+
+**Consider the code in this repo as sample code.**
+
 # CTA Scraper
 
 This webapp performed scheduled webscraping of politically-oriented calls to 
