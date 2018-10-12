@@ -2,6 +2,9 @@
 
 **Consider the code in this repo as sample code.**
 
+:warning: Some dependencies in the Gemfile point to versions which have security vulnerabilities. Please update to the latest versions before using this code. :warning:
+
+
 # CTA Scraper
 
 This webapp performed scheduled webscraping of politically-oriented calls to 
